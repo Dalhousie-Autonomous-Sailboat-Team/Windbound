@@ -45,7 +45,6 @@
 
 /* USER CODE BEGIN Includes */
 /* Section where include file can be added */
-#include "assert.h"
 /* USER CODE END Includes */
 
 /* Ensure definitions are only used by the compiler, and not by the assembler. */
@@ -60,7 +59,7 @@ extern uint32_t SystemCoreClock;
 /*-------------------- STM32H5 specific defines -------------------*/
 #define configENABLE_TRUSTZONE                   0
 #define configRUN_FREERTOS_SECURE_ONLY           0
-#define configENABLE_FPU                         0
+#define configENABLE_FPU                         1
 #define configENABLE_MPU                         0
 
 #define configUSE_PREEMPTION                     1
@@ -90,7 +89,7 @@ extern uint32_t SystemCoreClock;
 /* USER CODE BEGIN MESSAGE_BUFFER_LENGTH_TYPE */
 /* Defaults to size_t for backward compatibility, but can be changed
    if lengths will always be less than the number of bytes in a size_t. */
-#define configMESSAGE_BUFFER_LENGTH_TYPE size_t
+#define configMESSAGE_BUFFER_LENGTH_TYPE         size_t
 /* USER CODE END MESSAGE_BUFFER_LENGTH_TYPE */
 
 #define configRUN_TIME_COUNTER_TYPE              size_t
@@ -158,13 +157,7 @@ See http://www.FreeRTOS.org/RTOS-Cortex-M3-M4.html. */
 /* Normal assert() semantics without relying on the provision of an assert.h
 header file. */
 /* USER CODE BEGIN 1 */
-#define configASSERT(x)         \
-   if ((x) == 0)                \
-   {                            \
-      taskDISABLE_INTERRUPTS(); \
-      for (;;)                  \
-         ;                      \
-   }
+#define configASSERT( x ) if ((x) == 0) {taskDISABLE_INTERRUPTS(); for( ;; );}
 /* USER CODE END 1 */
 
 #define SysTick_Handler xPortSysTickHandler

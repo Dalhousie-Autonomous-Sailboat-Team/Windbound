@@ -6,9 +6,6 @@
  *
  * Following this guide:
  * https://interrupt.memfault.com/blog/asserts-in-embedded-systems
- *
- * @par
- * COPYRIGHT NOTICE: (c) 2025 DalMAST. All rights reserved.
  */
 
 #ifndef ASSERT_H

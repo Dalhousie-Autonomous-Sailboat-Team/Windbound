@@ -1,9 +1,6 @@
 /** @file sleep.c
  *
  * @brief Pre/Post Sleep processing.
- *
- * @par
- * COPYRIGHT NOTICE: (c) 2025 DalMAST. All rights reserved.
  */
 
 #include "main.h"
