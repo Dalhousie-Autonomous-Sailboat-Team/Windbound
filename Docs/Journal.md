@@ -17,6 +17,8 @@ Start of Windbound project. Forked from Nautono V3 firmware repo.
 
 ~~The sleep mode implementation from the Nautono repo seemed to have unnecessary calls for disabling and enabling the systick timer, as these are handled in the FreeRTOS port layer. Removed these calls in `PreSleepProcessing` and `PostSleepProcessing`. Now these functions only toggle GPIO pins to indicate when the system is entering and exiting sleep mode.~~
 
-Apparently, even though the FreeRTOS port layer adds assembly calls to the wait for interrupt instruction, the systick timer is not automatically disabled/enabled. Re-added the HAL_SuspendTick() call to PreSleepProcessing to disable the systick timer when entering sleep mode fixed the issue of the systick interrupt waking the MCU immediately after entering sleep mode.
+Apparently, even though the FreeRTOS port layer adds assembly calls to the wait for interrupt instruction, the systick timer is not automatically disabled/enabled. Re-added the HAL_SuspendTick() call to PreSleepProcessing to disable the systick timer when entering sleep mode fixed the issue of the systick interrupt waking the MCU immediately after entering sleep mode. However, the MCU still wakes up every 200 ms.
 
 There seems to be a typo in the HAL drivers where an expression is wrapped twice in parentheses, causing a warning. This is in a generated file, so it cannot be fixed directly. The warning was suppressed in the clang cmake file.
+
+I am currently using the HSE (I think? That is what I selected in CubeMX, but I have not verified. For all I know it is failing over to the HSI anyway) as the clock source. The HSE is running at 25 MHz, and according to the datasheet, this consumes around 5 mA on avaerage. I should consider switching to the HSI unless the HSE is absolutely necessary for some reason.
