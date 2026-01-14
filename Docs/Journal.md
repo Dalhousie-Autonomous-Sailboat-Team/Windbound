@@ -11,7 +11,7 @@
 
 ## Journal Entries
 
-### 2026-01-13
+### 2026-01-13 - Zach
 
 Start of Windbound project. Forked from Nautono V3 firmware repo.
 
@@ -22,3 +22,15 @@ Apparently, even though the FreeRTOS port layer adds assembly calls to the wait 
 There seems to be a typo in the HAL drivers where an expression is wrapped twice in parentheses, causing a warning. This is in a generated file, so it cannot be fixed directly. The warning was suppressed in the clang cmake file.
 
 I am currently using the HSE (I think? That is what I selected in CubeMX, but I have not verified. For all I know it is failing over to the HSI anyway) as the clock source. The HSE is running at 25 MHz, and according to the datasheet, this consumes around 5 mA on avaerage. I should consider switching to the HSI unless the HSE is absolutely necessary for some reason.
+
+### 2026-01-14 - Zach
+
+Before going into more of that level of optimization, I should focus on getting an MVP version of the firmware working first. I think an MVP should include:
+
+- Communication with Raspberry Pi over UART7 using the defined protocol
+- Communication with Radio over UART8 using the defined protocol
+- Reading Windvane data over USART3 - NMEA 0183 Protocol Listener
+- Reading GPS Data over USART2
+- Reading Mast Angle over I2C2 - Through I2C Multiplexer
+- Mast Motor Actuation using Timer 2 Channel 1 and 2 PWM Outputs
+- Rudder Servo Actuation using Timer 1 Channel 3 PWM Output

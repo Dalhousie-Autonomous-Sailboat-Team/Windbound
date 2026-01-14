@@ -5,9 +5,11 @@
 
 #define LED_SLEEP_INDICATOR /* Uncomment to enable sleep indicator LEDs */
 
+/* System Headers */
 #include "main.h"
 #include "cmsis_os2.h"
 
+/* Module Header */
 #include "sleep.h"
 
 /**
@@ -27,7 +29,7 @@ void PreSleepProcessing(uint32_t ulExpectedIdleTime)
 #endif /* LED_SLEEP_INDICATOR */
 
     /* Enter Sleep */
-    __WFI();
+    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 
     (void)ulExpectedIdleTime;
 }
