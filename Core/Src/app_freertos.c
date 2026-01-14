@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "user_i2c.h"
 
 /* USER CODE END Includes */
 
@@ -47,10 +48,29 @@
 /* Definitions for heartbeatTask */
 osThreadId_t heartbeatTaskHandle;
 const osThreadAttr_t heartbeatTask_attributes = {
-  .name = "heartbeatTask",
-  .priority = (osPriority_t) osPriorityLow,
-  .stack_size = 128 * 4
-};
+    .name = "heartbeatTask",
+    .priority = (osPriority_t)osPriorityLow,
+    .stack_size = 128 * 4};
+/* Definitions for i2c1Task */
+osThreadId_t i2c1TaskHandle;
+const osThreadAttr_t i2c1Task_attributes = {
+    .name = "i2c1Task",
+    .priority = (osPriority_t)osPriorityNormal,
+    .stack_size = 128 * 4};
+/* Definitions for i2c2Task */
+osThreadId_t i2c2TaskHandle;
+const osThreadAttr_t i2c2Task_attributes = {
+    .name = "i2c2Task",
+    .priority = (osPriority_t)osPriorityNormal,
+    .stack_size = 128 * 4};
+/* Definitions for i2c1_queue */
+osMessageQueueId_t i2c1_queueHandle;
+const osMessageQueueAttr_t i2c1_queue_attributes = {
+    .name = "i2c1_queue"};
+/* Definitions for i2c2_queue */
+osMessageQueueId_t i2c2_queueHandle;
+const osMessageQueueAttr_t i2c2_queue_attributes = {
+    .name = "i2c2_queue"};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -90,11 +110,12 @@ __weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
 /* USER CODE END PREPOSTSLEEP */
 
 /**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
-void MX_FREERTOS_Init(void) {
+ * @brief  FreeRTOS initialization
+ * @param  None
+ * @retval None
+ */
+void MX_FREERTOS_Init(void)
+{
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -110,12 +131,22 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_TIMERS */
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
+  /* creation of i2c1_queue */
+  i2c1_queueHandle = osMessageQueueNew(8, sizeof(I2C_Transaction_t), &i2c1_queue_attributes);
+  /* creation of i2c2_queue */
+  i2c2_queueHandle = osMessageQueueNew(8, sizeof(I2C_Transaction_t), &i2c2_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
   /* creation of heartbeatTask */
   heartbeatTaskHandle = osThreadNew(StartHeartbeatTask, NULL, &heartbeatTask_attributes);
+
+  /* creation of i2c1Task */
+  i2c1TaskHandle = osThreadNew(I2CManagerTask, (void *)1, &i2c1Task_attributes);
+
+  /* creation of i2c2Task */
+  i2c2TaskHandle = osThreadNew(I2CManagerTask, (void *)2, &i2c2Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -124,11 +155,9 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
-
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
-

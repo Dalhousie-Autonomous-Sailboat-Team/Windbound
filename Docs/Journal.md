@@ -34,3 +34,8 @@ Before going into more of that level of optimization, I should focus on getting 
 - Reading Mast Angle over I2C2 - Through I2C Multiplexer
 - Mast Motor Actuation using Timer 2 Channel 1 and 2 PWM Outputs
 - Rudder Servo Actuation using Timer 1 Channel 3 PWM Output
+
+**I2C Implementation:**
+
+- Created a basic I2C manager task that handles I2C transactions in a queue. This task will service I2C requests from other tasks to avoid bus contention.
+- Created a user_i2c driver with functions to initialize the I2C peripherals and to create and submit I2C transactions to the I2C manager task.

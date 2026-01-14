@@ -55,6 +55,10 @@ extern "C" {
 
 /* USER CODE END EM */
 extern osThreadId_t heartbeatTaskHandle;
+extern osThreadId_t i2c1TaskHandle;
+extern osThreadId_t i2c2TaskHandle;
+extern osMessageQueueId_t i2c1_queueHandle;
+extern osMessageQueueId_t i2c2_queueHandle;
 
 /* Exported function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -62,6 +66,8 @@ extern osThreadId_t heartbeatTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 extern void StartHeartbeatTask(void *argument);
+extern void I2CManagerTask(void *argument);
+extern void I2CManagerTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
