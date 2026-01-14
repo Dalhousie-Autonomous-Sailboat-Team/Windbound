@@ -45,11 +45,21 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
+    User/Src/usermain.c
+    User/Src/Utils/assert.c
+    User/Src/L1/sleep.c
+    User/Src/L1/heartbeat.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    User/Inc
+    User/Inc/Utils
+    User/Inc/L1
+    User/Inc/L2
+    User/Inc/L3
+    User/Inc/L4
 )
 
 # Add project symbols (macros)

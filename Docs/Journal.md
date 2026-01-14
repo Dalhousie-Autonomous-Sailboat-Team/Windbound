@@ -8,3 +8,15 @@
 - Motor 2 output (labelled RUDDER on the PCB) is now used to control the Mast motor.
 - Motor 3 output (labelled FLAP2 on the PCB) is used to control the back flap motor.
 - Silkscreen on/off switch labels are reversed.
+
+## Journal Entries
+
+### 2026-01-13
+
+Start of Windbound project. Forked from Nautono V3 firmware repo.
+
+~~The sleep mode implementation from the Nautono repo seemed to have unnecessary calls for disabling and enabling the systick timer, as these are handled in the FreeRTOS port layer. Removed these calls in `PreSleepProcessing` and `PostSleepProcessing`. Now these functions only toggle GPIO pins to indicate when the system is entering and exiting sleep mode.~~
+
+Apparently, even though the FreeRTOS port layer adds assembly calls to the wait for interrupt instruction, the systick timer is not automatically disabled/enabled. Re-added the HAL_SuspendTick() call to PreSleepProcessing to disable the systick timer when entering sleep mode fixed the issue of the systick interrupt waking the MCU immediately after entering sleep mode.
+
+There seems to be a typo in the HAL drivers where an expression is wrapped twice in parentheses, causing a warning. This is in a generated file, so it cannot be fixed directly. The warning was suppressed in the clang cmake file.
