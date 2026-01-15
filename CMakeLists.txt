@@ -50,6 +50,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     User/Src/L1/sleep.c
     User/Src/L1/heartbeat.c
     User/Src/L1/user_i2c.c
+    User/Src/L3/angle_sensors.c
 )
 
 # Add include paths
