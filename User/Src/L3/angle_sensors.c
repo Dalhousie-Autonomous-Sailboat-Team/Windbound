@@ -18,6 +18,7 @@
 #define MAST_ANGLE_MUX_CHANNEL I2C_MUX_CHANNEL_4
 extern osSemaphoreId_t mastAngleReadCompleteHandle;
 extern osMessageQueueId_t i2c2_queueHandle;
+extern osMessageQueueId_t mast_angle_queueHandle;
 
 typedef enum
 {
@@ -60,20 +61,26 @@ void MastAngleTask(void *argument)
     while (true)
     {
         uint32_t current_tick = osKernelGetTickCount();
-        osMessageQueuePut(
-            i2c2_queueHandle,
-            &transaction,
-            0,
-            osWaitForever);
-        osSemaphoreAcquire(mastAngleReadCompleteHandle, osWaitForever);
-        if (!*transaction.success)
+        if (osMessageQueuePut(
+                i2c2_queueHandle,
+                &transaction,
+                0,
+                0) == osOK)
         {
-            /* Handle I2C read failure (e.g., log error, retry, etc.) */
-            // ASSERT(0, "Mast I2C read failure");
-            continue;
+            osSemaphoreAcquire(mastAngleReadCompleteHandle, osWaitForever);
+            if (!*transaction.success)
+            {
+                /* TODO: Log I2C read failure to Debug Output/EEPROM */
+                continue;
+            }
+            uint16_t angle = (angle_data[0] << 8) | angle_data[1];
+            osMessageQueuePut(
+                mast_angle_queueHandle,
+                &angle,
+                0,
+                0);
+            osDelayUntil(current_tick + MAST_ANGLE_READ_PERIOD_MS);
         }
-        volatile uint16_t angle = (angle_data[0] << 8) | angle_data[1];
-        osDelayUntil(current_tick + MAST_ANGLE_READ_PERIOD_MS);
     }
 
     UNUSED(argument);

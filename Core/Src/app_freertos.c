@@ -83,6 +83,11 @@ osMessageQueueId_t i2c2_queueHandle;
 const osMessageQueueAttr_t i2c2_queue_attributes = {
   .name = "i2c2_queue"
 };
+/* Definitions for mast_angle_queue */
+osMessageQueueId_t mast_angle_queueHandle;
+const osMessageQueueAttr_t mast_angle_queue_attributes = {
+  .name = "mast_angle_queue"
+};
 /* Definitions for mastAngleReadComplete */
 osSemaphoreId_t mastAngleReadCompleteHandle;
 const osSemaphoreAttr_t mastAngleReadComplete_attributes = {
@@ -153,6 +158,8 @@ void MX_FREERTOS_Init(void) {
   i2c1_queueHandle = osMessageQueueNew (8, sizeof(I2C_Transaction_t), &i2c1_queue_attributes);
   /* creation of i2c2_queue */
   i2c2_queueHandle = osMessageQueueNew (8, sizeof(I2C_Transaction_t), &i2c2_queue_attributes);
+  /* creation of mast_angle_queue */
+  mast_angle_queueHandle = osMessageQueueNew (1, sizeof(uint16_t), &mast_angle_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */

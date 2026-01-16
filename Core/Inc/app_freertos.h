@@ -60,6 +60,7 @@ extern osThreadId_t i2c2TaskHandle;
 extern osThreadId_t mastAngleTaskHandle;
 extern osMessageQueueId_t i2c1_queueHandle;
 extern osMessageQueueId_t i2c2_queueHandle;
+extern osMessageQueueId_t mast_angle_queueHandle;
 extern osSemaphoreId_t mastAngleReadCompleteHandle;
 
 /* Exported function prototypes -----------------------------------------------*/
