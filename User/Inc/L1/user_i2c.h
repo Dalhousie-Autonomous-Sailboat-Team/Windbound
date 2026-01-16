@@ -41,7 +41,7 @@ typedef struct
     size_t read_length;
     uint32_t timeout_ms;
     osSemaphoreId_t completion_semaphore;
-    bool success;
+    bool *success;
 } I2C_Transaction_t;
 
 #endif /* USER_I2C_H */

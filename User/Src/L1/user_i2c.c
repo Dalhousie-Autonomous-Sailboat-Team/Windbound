@@ -39,7 +39,7 @@ static bool I2C_StartAndWait(
     HAL_StatusTypeDef start_status,
     uint32_t timeout_ms)
 {
-    if (start_status != HAL_OK)
+    if (start_status == HAL_ERROR || start_status == HAL_TIMEOUT)
     {
         return false;
     }
@@ -76,6 +76,7 @@ static bool I2C_SetMuxChannel(
     uint8_t *current_channel,
     uint32_t timeout_ms)
 {
+    /* If the desired channel is already set, do nothing */
     if (new_channel == I2C_MUX_NO_CHANNEL ||
         new_channel == *current_channel)
     {
@@ -84,7 +85,7 @@ static bool I2C_SetMuxChannel(
 
     osThreadFlagsClear(I2C_FLAG_DONE | I2C_FLAG_ERROR);
 
-    uint8_t mux_cmd = (1U << new_channel);
+    uint8_t mux_cmd = (new_channel);
 
     if (!I2C_StartAndWait(
             HAL_I2C_Master_Transmit_IT(
@@ -113,14 +114,19 @@ static void I2C_ExecuteTransaction(
     I2C_Transaction_t *transaction,
     uint8_t *current_mux_channel)
 {
-#define I2C_FAIL()                    \
-    do                                \
-    {                                 \
-        transaction->success = false; \
-        goto complete;                \
+    /* Macro for handling I2C failures - wrapped in do-while to avoid scope issues */
+#define I2C_FAIL()                     \
+    do                                 \
+    {                                  \
+        *transaction->success = false; \
+        goto complete;                 \
     } while (0)
 
-    transaction->success = false;
+    ASSERT(transaction != NULL, "I2C_ExecuteTransaction: transaction is NULL");
+    ASSERT(transaction->completion_semaphore != NULL, "I2C_ExecuteTransaction: completion_semaphore is NULL");
+    ASSERT(transaction->success != NULL, "I2C_ExecuteTransaction: success pointer is NULL");
+
+    *transaction->success = false;
     osThreadFlagsClear(I2C_FLAG_DONE | I2C_FLAG_ERROR);
 
     /* Configure I2C multiplexer if required */
@@ -133,7 +139,6 @@ static void I2C_ExecuteTransaction(
         I2C_FAIL();
     }
 
-    /* First phase */
     switch (transaction->operation)
     {
     case I2C_OP_WRITE:
@@ -193,7 +198,7 @@ static void I2C_ExecuteTransaction(
         break;
     }
 
-    transaction->success = true;
+    *transaction->success = true;
 
 complete:
 #undef I2C_FAIL
@@ -244,5 +249,35 @@ void I2CManagerTask(void *argument)
 
             osSemaphoreRelease(transaction.completion_semaphore);
         }
+    }
+}
+
+void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+    if (hi2c == &hi2c1)
+        osThreadFlagsSet(i2c1_manager_thread, I2C_FLAG_DONE);
+    else if (hi2c == &hi2c2)
+    {
+        osThreadFlagsSet(i2c2_manager_thread, I2C_FLAG_DONE);
+    }
+}
+
+void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
+{
+    if (hi2c == &hi2c1)
+        osThreadFlagsSet(i2c1_manager_thread, I2C_FLAG_DONE);
+    else if (hi2c == &hi2c2)
+    {
+        osThreadFlagsSet(i2c2_manager_thread, I2C_FLAG_DONE);
+    }
+}
+
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
+{
+    if (hi2c == &hi2c1)
+        osThreadFlagsSet(i2c1_manager_thread, I2C_FLAG_ERROR);
+    else if (hi2c == &hi2c2)
+    {
+        osThreadFlagsSet(i2c2_manager_thread, I2C_FLAG_ERROR);
     }
 }

@@ -66,6 +66,13 @@ const osThreadAttr_t i2c2Task_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 128 * 4
 };
+/* Definitions for mastAngleTask */
+osThreadId_t mastAngleTaskHandle;
+const osThreadAttr_t mastAngleTask_attributes = {
+  .name = "mastAngleTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 /* Definitions for i2c1_queue */
 osMessageQueueId_t i2c1_queueHandle;
 const osMessageQueueAttr_t i2c1_queue_attributes = {
@@ -75,6 +82,11 @@ const osMessageQueueAttr_t i2c1_queue_attributes = {
 osMessageQueueId_t i2c2_queueHandle;
 const osMessageQueueAttr_t i2c2_queue_attributes = {
   .name = "i2c2_queue"
+};
+/* Definitions for mastAngleReadComplete */
+osSemaphoreId_t mastAngleReadCompleteHandle;
+const osSemaphoreAttr_t mastAngleReadComplete_attributes = {
+  .name = "mastAngleReadComplete"
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -127,6 +139,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
+  /* creation of mastAngleReadComplete */
+  mastAngleReadCompleteHandle = osSemaphoreNew(1, 1, &mastAngleReadComplete_attributes);
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
   /* add semaphores, ... */
@@ -151,6 +165,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of i2c2Task */
   i2c2TaskHandle = osThreadNew(I2CManagerTask, (void *)2, &i2c2Task_attributes);
+
+  /* creation of mastAngleTask */
+  mastAngleTaskHandle = osThreadNew(MastAngleTask, NULL, &mastAngleTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
