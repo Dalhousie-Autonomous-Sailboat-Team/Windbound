@@ -74,6 +74,12 @@ void MastAngleTask(void *argument)
                 continue;
             }
             uint16_t angle = (angle_data[0] << 8) | angle_data[1];
+            if (osMessageQueueGetSpace(mast_angle_queueHandle) == 0)
+            {
+                /* If the queue is full, remove the oldest entry */
+                uint16_t discarded_angle;
+                osMessageQueueGet(mast_angle_queueHandle, &discarded_angle, NULL, 0);
+            }
             osMessageQueuePut(
                 mast_angle_queueHandle,
                 &angle,
