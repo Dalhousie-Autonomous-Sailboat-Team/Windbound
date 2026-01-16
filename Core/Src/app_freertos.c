@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "user_i2c.h"
+#include "user_uart.h"
 
 /* USER CODE END Includes */
 
@@ -73,6 +74,18 @@ const osThreadAttr_t mastAngleTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 128 * 4
 };
+/* Definitions for uartParserTask */
+osThreadId_t uartParserTaskHandle;
+const osThreadAttr_t uartParserTask_attributes = {
+  .name = "uartParserTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
+/* Definitions for debugPrintStringMutex */
+osMutexId_t debugPrintStringMutexHandle;
+const osMutexAttr_t debugPrintStringMutex_attributes = {
+  .name = "debugPrintStringMutex"
+};
 /* Definitions for i2c1_queue */
 osMessageQueueId_t i2c1_queueHandle;
 const osMessageQueueAttr_t i2c1_queue_attributes = {
@@ -87,6 +100,11 @@ const osMessageQueueAttr_t i2c2_queue_attributes = {
 osMessageQueueId_t mast_angle_queueHandle;
 const osMessageQueueAttr_t mast_angle_queue_attributes = {
   .name = "mast_angle_queue"
+};
+/* Definitions for uart_rx_queue */
+osMessageQueueId_t uart_rx_queueHandle;
+const osMessageQueueAttr_t uart_rx_queue_attributes = {
+  .name = "uart_rx_queue"
 };
 /* Definitions for mastAngleReadComplete */
 osSemaphoreId_t mastAngleReadCompleteHandle;
@@ -140,6 +158,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
+  /* creation of debugPrintStringMutex */
+  debugPrintStringMutexHandle = osMutexNew(&debugPrintStringMutex_attributes);
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -160,6 +180,8 @@ void MX_FREERTOS_Init(void) {
   i2c2_queueHandle = osMessageQueueNew (8, sizeof(I2C_Transaction_t), &i2c2_queue_attributes);
   /* creation of mast_angle_queue */
   mast_angle_queueHandle = osMessageQueueNew (1, sizeof(uint16_t), &mast_angle_queue_attributes);
+  /* creation of uart_rx_queue */
+  uart_rx_queueHandle = osMessageQueueNew (32, sizeof(UART_Char_t), &uart_rx_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -175,6 +197,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of mastAngleTask */
   mastAngleTaskHandle = osThreadNew(MastAngleTask, NULL, &mastAngleTask_attributes);
+
+  /* creation of uartParserTask */
+  uartParserTaskHandle = osThreadNew(UARTParserTask, NULL, &uartParserTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

@@ -39,3 +39,9 @@ Before going into more of that level of optimization, I should focus on getting 
 
 - Created a basic I2C manager task that handles I2C transactions in a queue. This task will service I2C requests from other tasks to avoid bus contention.
 - Created a user_i2c driver with functions to initialize the I2C peripherals and to create and submit I2C transactions to the I2C manager task.
+
+### 2026-01-16 - Zach
+
+I refactored the I2C manager to handle the I2C mux as well. I then created a mast angle sensor task that reads the mast angle from the sensor over the I2C mux and sends the angle to a message queue for other tasks to use. This implementation is barebones, and will likely need to be improved. It may need some filtering once we get to control implementation.
+
+I am now working on the UART driver for communication over the debug port, with the Raspberry Pi, and with the Radio.
