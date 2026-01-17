@@ -624,4 +624,4 @@ rtos.0.tasks.1=allocationType,Dynamic;bufferName,NULL;codeGen,As external;contro
 rtos.0.tasks.2=allocationType,Dynamic;bufferName,NULL;codeGen,As external;controlBlockName,NULL;entry,I2CManagerTask;name,i2c2Task;parameter,(void *)2;priority,osPriorityNormal;stackSize,128
 rtos.0.tasks.3=allocationType,Dynamic;bufferName,NULL;codeGen,As external;controlBlockName,NULL;entry,MastAngleTask;name,mastAngleTask;parameter,NULL;priority,osPriorityNormal;stackSize,128
 rtos.0.tasks.4=allocationType,Dynamic;bufferName,NULL;codeGen,As external;controlBlockName,NULL;entry,UARTParserTask;name,uartParserTask;parameter,NULL;priority,osPriorityNormal;stackSize,128
-rtos.0.tasks.5=allocationType,Dynamic;bufferName,NULL;codeGen,As external;controlBlockName,NULL;entry,CommandDispatchTask;name,commandDispatchTask;parameter,NULL;priority,osPriorityNormal;stackSize,128
+rtos.0.tasks.5=allocationType,Dynamic;bufferName,NULL;codeGen,As external;controlBlockName,NULL;entry,CommandDispatchTask;name,commandDispatchTask;parameter,NULL;priority,osPriorityNormal;stackSize,256

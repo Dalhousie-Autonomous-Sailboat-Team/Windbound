@@ -111,6 +111,7 @@ static void ProcessDebugData(uint8_t data)
             parse_storage[index] = (char)tolower((unsigned char)data);
             index++;
         }
+
         break;
     }
 }

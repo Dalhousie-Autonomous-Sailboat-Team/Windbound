@@ -44,27 +44,30 @@ static void Dispatch_Command(const char *command, char arguments[MAX_COMMAND_ARG
             return;
         }
     }
-    /* Command not found - handle as needed */
+    char response[64];
+    snprintf(response, sizeof(response), "Unknown command >%s<\n", command);
+    Debug_Print_String(response);
     return;
 }
 
 static void Get_Angle_Handler(char arguments[MAX_COMMAND_ARGUMENTS][MAX_ARGUMENT_LEN], uint8_t arg_count)
 {
-    if (arg_count < 1)
+    static char response[64];
+    if (arg_count != 1)
     {
-        /* Handle error: insufficient arguments */
+        Debug_Print_String("Invalid arg count\n");
         return;
     }
     if (strcmp(arguments[0], "mast") == 0)
     {
         uint16_t angle = Get_Mast_Angle();
-        char response[32];
         snprintf(response, sizeof(response), "MAST_ANGLE:%u\n", angle);
         Debug_Print_String(response);
     }
     else
     {
-        /* Handle error: unknown angle type */
+        snprintf(response, sizeof(response), "Unknown argument >%s<\n", arguments[0]);
+        Debug_Print_String(response);
         return;
     }
 }

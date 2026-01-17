@@ -50,67 +50,80 @@
 /* Definitions for heartbeatTask */
 osThreadId_t heartbeatTaskHandle;
 const osThreadAttr_t heartbeatTask_attributes = {
-    .name = "heartbeatTask",
-    .priority = (osPriority_t)osPriorityLow,
-    .stack_size = 128 * 4};
+  .name = "heartbeatTask",
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 128 * 4
+};
 /* Definitions for i2c1Task */
 osThreadId_t i2c1TaskHandle;
 const osThreadAttr_t i2c1Task_attributes = {
-    .name = "i2c1Task",
-    .priority = (osPriority_t)osPriorityNormal,
-    .stack_size = 128 * 4};
+  .name = "i2c1Task",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 /* Definitions for i2c2Task */
 osThreadId_t i2c2TaskHandle;
 const osThreadAttr_t i2c2Task_attributes = {
-    .name = "i2c2Task",
-    .priority = (osPriority_t)osPriorityNormal,
-    .stack_size = 128 * 4};
+  .name = "i2c2Task",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 /* Definitions for mastAngleTask */
 osThreadId_t mastAngleTaskHandle;
 const osThreadAttr_t mastAngleTask_attributes = {
-    .name = "mastAngleTask",
-    .priority = (osPriority_t)osPriorityNormal,
-    .stack_size = 128 * 4};
+  .name = "mastAngleTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 /* Definitions for uartParserTask */
 osThreadId_t uartParserTaskHandle;
 const osThreadAttr_t uartParserTask_attributes = {
-    .name = "uartParserTask",
-    .priority = (osPriority_t)osPriorityNormal,
-    .stack_size = 128 * 4};
+  .name = "uartParserTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 128 * 4
+};
 /* Definitions for commandDispatchTask */
 osThreadId_t commandDispatchTaskHandle;
 const osThreadAttr_t commandDispatchTask_attributes = {
-    .name = "commandDispatchTask",
-    .priority = (osPriority_t)osPriorityNormal,
-    .stack_size = 128 * 4};
+  .name = "commandDispatchTask",
+  .priority = (osPriority_t) osPriorityNormal,
+  .stack_size = 256 * 4
+};
 /* Definitions for debugPrintStringMutex */
 osMutexId_t debugPrintStringMutexHandle;
 const osMutexAttr_t debugPrintStringMutex_attributes = {
-    .name = "debugPrintStringMutex"};
+  .name = "debugPrintStringMutex"
+};
 /* Definitions for i2c1_queue */
 osMessageQueueId_t i2c1_queueHandle;
 const osMessageQueueAttr_t i2c1_queue_attributes = {
-    .name = "i2c1_queue"};
+  .name = "i2c1_queue"
+};
 /* Definitions for i2c2_queue */
 osMessageQueueId_t i2c2_queueHandle;
 const osMessageQueueAttr_t i2c2_queue_attributes = {
-    .name = "i2c2_queue"};
+  .name = "i2c2_queue"
+};
 /* Definitions for mast_angle_queue */
 osMessageQueueId_t mast_angle_queueHandle;
 const osMessageQueueAttr_t mast_angle_queue_attributes = {
-    .name = "mast_angle_queue"};
+  .name = "mast_angle_queue"
+};
 /* Definitions for uart_rx_queue */
 osMessageQueueId_t uart_rx_queueHandle;
 const osMessageQueueAttr_t uart_rx_queue_attributes = {
-    .name = "uart_rx_queue"};
+  .name = "uart_rx_queue"
+};
 /* Definitions for debug_command_queue */
 osMessageQueueId_t debug_command_queueHandle;
 const osMessageQueueAttr_t debug_command_queue_attributes = {
-    .name = "debug_command_queue"};
+  .name = "debug_command_queue"
+};
 /* Definitions for mastAngleReadComplete */
 osSemaphoreId_t mastAngleReadCompleteHandle;
 const osSemaphoreAttr_t mastAngleReadComplete_attributes = {
-    .name = "mastAngleReadComplete"};
+  .name = "mastAngleReadComplete"
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -150,12 +163,11 @@ __weak void PostSleepProcessing(uint32_t ulExpectedIdleTime)
 /* USER CODE END PREPOSTSLEEP */
 
 /**
- * @brief  FreeRTOS initialization
- * @param  None
- * @retval None
- */
-void MX_FREERTOS_Init(void)
-{
+  * @brief  FreeRTOS initialization
+  * @param  None
+  * @retval None
+  */
+void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -176,15 +188,15 @@ void MX_FREERTOS_Init(void)
   /* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
   /* creation of i2c1_queue */
-  i2c1_queueHandle = osMessageQueueNew(8, sizeof(I2C_Transaction_t), &i2c1_queue_attributes);
+  i2c1_queueHandle = osMessageQueueNew (8, sizeof(I2C_Transaction_t), &i2c1_queue_attributes);
   /* creation of i2c2_queue */
-  i2c2_queueHandle = osMessageQueueNew(8, sizeof(I2C_Transaction_t), &i2c2_queue_attributes);
+  i2c2_queueHandle = osMessageQueueNew (8, sizeof(I2C_Transaction_t), &i2c2_queue_attributes);
   /* creation of mast_angle_queue */
-  mast_angle_queueHandle = osMessageQueueNew(1, sizeof(uint16_t), &mast_angle_queue_attributes);
+  mast_angle_queueHandle = osMessageQueueNew (1, sizeof(uint16_t), &mast_angle_queue_attributes);
   /* creation of uart_rx_queue */
-  uart_rx_queueHandle = osMessageQueueNew(32, sizeof(UART_Char_t), &uart_rx_queue_attributes);
+  uart_rx_queueHandle = osMessageQueueNew (32, sizeof(UART_Char_t), &uart_rx_queue_attributes);
   /* creation of debug_command_queue */
-  debug_command_queueHandle = osMessageQueueNew(4, sizeof(Command_Message_t), &debug_command_queue_attributes);
+  debug_command_queueHandle = osMessageQueueNew (4, sizeof(Command_Message_t), &debug_command_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -214,9 +226,11 @@ void MX_FREERTOS_Init(void)
   /* USER CODE BEGIN RTOS_EVENTS */
   /* add events, ... */
   /* USER CODE END RTOS_EVENTS */
+
 }
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
 /* USER CODE END Application */
+
