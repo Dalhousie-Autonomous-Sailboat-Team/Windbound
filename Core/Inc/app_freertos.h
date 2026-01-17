@@ -64,6 +64,7 @@ extern osMessageQueueId_t i2c1_queueHandle;
 extern osMessageQueueId_t i2c2_queueHandle;
 extern osMessageQueueId_t mast_angle_queueHandle;
 extern osMessageQueueId_t uart_rx_queueHandle;
+extern osMessageQueueId_t debug_command_queueHandle;
 extern osSemaphoreId_t mastAngleReadCompleteHandle;
 
 /* Exported function prototypes -----------------------------------------------*/
