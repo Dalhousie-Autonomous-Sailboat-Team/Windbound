@@ -45,3 +45,11 @@ Before going into more of that level of optimization, I should focus on getting 
 I refactored the I2C manager to handle the I2C mux as well. I then created a mast angle sensor task that reads the mast angle from the sensor over the I2C mux and sends the angle to a message queue for other tasks to use. This implementation is barebones, and will likely need to be improved. It may need some filtering once we get to control implementation.
 
 I am now working on the UART driver for communication over the debug port, with the Raspberry Pi, and with the Radio.
+
+### 2026-01-17 - Zach
+
+I created a basic UART driver that can support multiple UART peripherals. I have implemented the debug UART on UART4, but it should be relatively easy to add support for the other peripherals as needed. I have also wrote a basic CLI task that can handle simple commands over the debug UART. This will be useful for testing and debugging. We can decide whether we want to use this same driver for the JSON based communication with the Raspberry Pi and Radio later by parsing the messages into the command format used by the CLI.
+
+I am tempted to enable OTA updates over UART with this CLI. We could then use the Radio to send firmware updates to the Windbound board. If Shishir doesn't like me working on MVP functionality, this could be a fun side project.
+
+Looking at the RTOS debugger, it looks like we are sleeping for 99.93% of the time even when spamming commands. This is a good sign that my driver implementations are not blocking the CPU unnecessarily.
