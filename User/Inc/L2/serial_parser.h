@@ -9,16 +9,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MAX_DEBUG_ARGUMENTS 4
+#define MAX_COMMAND_ARGUMENTS 4
 #define MAX_COMMAND_LEN 32
 #define MAX_ARGUMENT_LEN 32
 
 typedef struct
 {
     char command[MAX_COMMAND_LEN];
-    char arguments[MAX_DEBUG_ARGUMENTS][MAX_ARGUMENT_LEN];
+    char arguments[MAX_COMMAND_ARGUMENTS][MAX_ARGUMENT_LEN];
     uint8_t arg_count;
-} Debug_Command_Message_t;
+} Command_Message_t;
 
 #endif /* USER_SERIAL_PARSER_H */
 

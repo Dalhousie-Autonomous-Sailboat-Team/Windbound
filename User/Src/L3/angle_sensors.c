@@ -12,6 +12,7 @@
 #include "angle_sensors.h"
 
 #include "user_i2c.h"
+#include "app_freertos.h"
 
 #define MAST_ANGLE_READ_PERIOD_MS 1000
 #define ANGLE_SENSOR_ADDRESS (0x36 << 1) /* I2C address for the angle sensor */
@@ -19,6 +20,8 @@
 extern osSemaphoreId_t mastAngleReadCompleteHandle;
 extern osMessageQueueId_t i2c2_queueHandle;
 extern osMessageQueueId_t mast_angle_queueHandle;
+
+uint16_t Mast_Angle = 0;
 
 typedef enum
 {
@@ -74,6 +77,8 @@ void MastAngleTask(void *argument)
                 continue;
             }
             uint16_t angle = (angle_data[0] << 8) | angle_data[1];
+            angle &= 0x0FFF;    /* Angle is 12 bits */
+            Mast_Angle = angle; /* Update global mast angle variable */
             if (osMessageQueueGetSpace(mast_angle_queueHandle) == 0)
             {
                 /* If the queue is full, remove the oldest entry */
@@ -90,4 +95,14 @@ void MastAngleTask(void *argument)
     }
 
     UNUSED(argument);
+}
+
+/**
+ * @brief Retrieves the latest mast angle from the angle sensor.
+ *
+ * @return uint16_t The latest mast angle in degrees (0-3599, representing 0.0 to 359.9 degrees).
+ */
+uint16_t Get_Mast_Angle(void)
+{
+    return Mast_Angle;
 }

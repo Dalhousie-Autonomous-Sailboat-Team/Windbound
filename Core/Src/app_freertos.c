@@ -77,6 +77,12 @@ const osThreadAttr_t uartParserTask_attributes = {
     .name = "uartParserTask",
     .priority = (osPriority_t)osPriorityNormal,
     .stack_size = 128 * 4};
+/* Definitions for commandDispatchTask */
+osThreadId_t commandDispatchTaskHandle;
+const osThreadAttr_t commandDispatchTask_attributes = {
+    .name = "commandDispatchTask",
+    .priority = (osPriority_t)osPriorityNormal,
+    .stack_size = 128 * 4};
 /* Definitions for debugPrintStringMutex */
 osMutexId_t debugPrintStringMutexHandle;
 const osMutexAttr_t debugPrintStringMutex_attributes = {
@@ -178,7 +184,7 @@ void MX_FREERTOS_Init(void)
   /* creation of uart_rx_queue */
   uart_rx_queueHandle = osMessageQueueNew(32, sizeof(UART_Char_t), &uart_rx_queue_attributes);
   /* creation of debug_command_queue */
-  debug_command_queueHandle = osMessageQueueNew(4, sizeof(Debug_Command_Message_t), &debug_command_queue_attributes);
+  debug_command_queueHandle = osMessageQueueNew(4, sizeof(Command_Message_t), &debug_command_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -197,6 +203,9 @@ void MX_FREERTOS_Init(void)
 
   /* creation of uartParserTask */
   uartParserTaskHandle = osThreadNew(UARTParserTask, NULL, &uartParserTask_attributes);
+
+  /* creation of commandDispatchTask */
+  commandDispatchTaskHandle = osThreadNew(CommandDispatchTask, NULL, &commandDispatchTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

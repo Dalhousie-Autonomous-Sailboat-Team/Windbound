@@ -107,6 +107,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         osMessageQueuePut(uart_rx_queueHandle, &uart_char, 0, 0);
         /* Restart Interrupt Character Reception for UART4 */
         HAL_UART_Receive_IT(huart, &uart4_rx_byte, 1);
+        /* Echo byte back to host */
+        HAL_UART_Transmit(huart, &uart4_rx_byte, 1, 0);
     }
 }
 

@@ -1,20 +1,20 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * File Name          : app_freertos.h
-  * Description        : FreeRTOS applicative header file
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * File Name          : app_freertos.h
+ * Description        : FreeRTOS applicative header file
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2026 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
@@ -59,6 +59,7 @@ extern osThreadId_t i2c1TaskHandle;
 extern osThreadId_t i2c2TaskHandle;
 extern osThreadId_t mastAngleTaskHandle;
 extern osThreadId_t uartParserTaskHandle;
+extern osThreadId_t commandDispatchTaskHandle;
 extern osMutexId_t debugPrintStringMutexHandle;
 extern osMessageQueueId_t i2c1_queueHandle;
 extern osMessageQueueId_t i2c2_queueHandle;
@@ -77,6 +78,7 @@ extern void I2CManagerTask(void *argument);
 extern void I2CManagerTask(void *argument);
 extern void MastAngleTask(void *argument);
 extern void UARTParserTask(void *argument);
+extern void CommandDispatchTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 

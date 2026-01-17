@@ -33,7 +33,7 @@ static void ProcessDebugData(uint8_t data)
     static uint8_t argument_counter = 0; /* Number of parsed tokens */
     static char parse_storage[PARSE_STORAGE_LEN];
 
-    static Debug_Command_Message_t command_message;
+    static Command_Message_t command_message;
 
     switch (data)
     {
@@ -60,7 +60,7 @@ static void ProcessDebugData(uint8_t data)
                     MAX_COMMAND_LEN - 1);
             command_message.command[MAX_COMMAND_LEN - 1] = NULL_CHAR;
         }
-        else if ((argument_counter - 1) < MAX_DEBUG_ARGUMENTS)
+        else if ((argument_counter - 1) < MAX_COMMAND_ARGUMENTS)
         {
             strncpy(command_message.arguments[argument_counter - 1],
                     parse_storage,
@@ -84,7 +84,7 @@ static void ProcessDebugData(uint8_t data)
                         MAX_COMMAND_LEN - 1);
                 command_message.command[MAX_COMMAND_LEN - 1] = NULL_CHAR;
             }
-            else if ((argument_counter - 1) < MAX_DEBUG_ARGUMENTS)
+            else if ((argument_counter - 1) < MAX_COMMAND_ARGUMENTS)
             {
                 strncpy(command_message.arguments[argument_counter - 1],
                         parse_storage,
