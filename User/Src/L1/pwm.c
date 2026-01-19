@@ -81,7 +81,7 @@ void PWM_Init(void)
  * @param channel PWM channel to set
  * @param duty_cycle Duty cycle value
  */
-void PWM_SetDutyCycle(PWM_Channel_t channel, int16_t duty_cycle)
+void PWM_SetDutyCycle(PWM_Channel_t channel, uint16_t duty_cycle)
 {
     switch (channel)
     {

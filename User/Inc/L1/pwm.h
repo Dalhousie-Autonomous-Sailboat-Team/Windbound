@@ -33,7 +33,7 @@ typedef struct
 } PWM_Duty_Cycle_t;
 
 void PWM_Init(void);
-void PWM_SetDutyCycle(PWM_Channel_t channel, int16_t duty_cycle);
+void PWM_SetDutyCycle(PWM_Channel_t channel, uint16_t duty_cycle);
 
 #endif /* PWM_H */
 

@@ -24,8 +24,8 @@
 #include "L1/pwm.h"
 #include "L3/angle_sensors.h"
 
-static void Get_Angle_Handler(Command_Message_t *command_message);
-static void Set_PWM_Handler(Command_Message_t *command_message);
+static Command_Status_t Get_Angle_Handler(Command_Message_t *command_message);
+static Command_Status_t Set_PWM_Handler(Command_Message_t *command_message);
 
 extern osMessageQueueId_t debug_command_queueHandle;
 
@@ -33,14 +33,13 @@ extern osMessageQueueId_t debug_command_queueHandle;
 typedef struct COMMAND_ENTRY
 {
     char command_string[16];
-    void (*handler_function)(Command_Message_t *command_message);
+    Command_Status_t (*handler_function)(Command_Message_t *command_message);
 } Command_Entry_t;
 
 /* Command Table */
 Command_Entry_t Command_Table[] = {
     {"get_angle", Get_Angle_Handler},
     {"set_pwm", Set_PWM_Handler}, /* Placeholder for future PWM command handler */
-    {"", NULL}                    /* End of Table Marker */
 };
 
 #define COMMAND_TABLE_SIZE (sizeof(Command_Table) / sizeof(Command_Entry_t))
@@ -51,29 +50,28 @@ Command_Entry_t Command_Table[] = {
  * @param arguments The command arguments.
  * @param arg_count The number of arguments.
  */
-void Dispatch_Command(Command_Message_t *command_message)
+Command_Status_t Dispatch_Command(Command_Message_t *command_message)
 {
     for (size_t i = 0; i < COMMAND_TABLE_SIZE; i++)
     {
         if (strcmp(command_message->command, Command_Table[i].command_string) == 0)
         {
-            Command_Table[i].handler_function(command_message);
-            return;
+            return Command_Table[i].handler_function(command_message);
         }
     }
     char response[64];
     snprintf(response, sizeof(response), "Unknown command >%s<\n", command_message->command);
     Debug_Print_String(response);
-    return;
+    return COMMAND_STATUS_UNKNOWN_COMMAND;
 }
 
-static void Get_Angle_Handler(Command_Message_t *command_message)
+static Command_Status_t Get_Angle_Handler(Command_Message_t *command_message)
 {
-    static char response[64];
+    char response[64];
     if (command_message->arg_count != 1)
     {
         Debug_Print_String("Invalid arg count\n");
-        return;
+        return COMMAND_STATUS_INVALID_ARGUMENT;
     }
     if (strcmp(command_message->arguments[0], "mast") == 0)
     {
@@ -85,17 +83,18 @@ static void Get_Angle_Handler(Command_Message_t *command_message)
     {
         snprintf(response, sizeof(response), "Unknown argument >%s<\n", command_message->arguments[0]);
         Debug_Print_String(response);
-        return;
+        return COMMAND_STATUS_INVALID_ARGUMENT;
     }
+    return COMMAND_STATUS_SUCCESS;
 }
 
-static void Set_PWM_Handler(Command_Message_t *command_message)
+static Command_Status_t Set_PWM_Handler(Command_Message_t *command_message)
 {
-    static char response[64];
+    char response[64];
     if (command_message->arg_count != 2)
     {
         Debug_Print_String("Invalid arg count\n");
-        return;
+        return COMMAND_STATUS_INVALID_ARGUMENT;
     }
 
     PWM_Channel_t channel;
@@ -135,9 +134,19 @@ static void Set_PWM_Handler(Command_Message_t *command_message)
     {
         snprintf(response, sizeof(response), "Unknown channel >%s<\n", command_message->arguments[0]);
         Debug_Print_String(response);
-        return;
+        return COMMAND_STATUS_INVALID_ARGUMENT;
     }
 
-    int16_t duty_cycle = (int16_t)atoi(command_message->arguments[1]);
-    PWM_SetDutyCycle(channel, duty_cycle);
+    /* Parse duty cycle value */
+    char *end;
+    uint16_t value = strtol(command_message->arguments[1], &end, 10);
+
+    if (*end != '\0')
+    {
+        Debug_Print_String("Invalid duty cycle\n");
+        return COMMAND_STATUS_INVALID_ARGUMENT;
+    }
+
+    PWM_SetDutyCycle(channel, value);
+    return COMMAND_STATUS_SUCCESS;
 }

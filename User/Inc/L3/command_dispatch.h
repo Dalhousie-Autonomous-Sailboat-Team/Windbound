@@ -20,7 +20,15 @@ typedef struct
     uint8_t arg_count;
 } Command_Message_t;
 
-void Dispatch_Command(Command_Message_t *command_message);
+typedef enum
+{
+    COMMAND_STATUS_SUCCESS = 0,
+    COMMAND_STATUS_UNKNOWN_COMMAND,
+    COMMAND_STATUS_INVALID_ARGUMENT,
+    COMMAND_STATUS_ERROR
+} Command_Status_t;
+
+Command_Status_t Dispatch_Command(Command_Message_t *command_message);
 
 #endif /* COMMAND_DISPATCH_H */
 
