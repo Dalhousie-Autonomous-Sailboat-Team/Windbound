@@ -24,7 +24,6 @@
 /* USER CODE BEGIN Includes */
 #include "user_i2c.h"
 #include "user_uart.h"
-#include "serial_parser.h"
 
 /* USER CODE END Includes */
 
@@ -80,13 +79,6 @@ osThreadId_t uartParserTaskHandle;
 const osThreadAttr_t uartParserTask_attributes = {
   .name = "uartParserTask",
   .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 128 * 4
-};
-/* Definitions for commandDispatchTask */
-osThreadId_t commandDispatchTaskHandle;
-const osThreadAttr_t commandDispatchTask_attributes = {
-  .name = "commandDispatchTask",
-  .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 256 * 4
 };
 /* Definitions for heartbeatTask */
@@ -120,11 +112,6 @@ const osMessageQueueAttr_t mast_angle_queue_attributes = {
 osMessageQueueId_t uart_rx_queueHandle;
 const osMessageQueueAttr_t uart_rx_queue_attributes = {
   .name = "uart_rx_queue"
-};
-/* Definitions for debug_command_queue */
-osMessageQueueId_t debug_command_queueHandle;
-const osMessageQueueAttr_t debug_command_queue_attributes = {
-  .name = "debug_command_queue"
 };
 /* Definitions for mastAngleReadComplete */
 osSemaphoreId_t mastAngleReadCompleteHandle;
@@ -202,8 +189,6 @@ void MX_FREERTOS_Init(void) {
   mast_angle_queueHandle = osMessageQueueNew (1, sizeof(uint16_t), &mast_angle_queue_attributes);
   /* creation of uart_rx_queue */
   uart_rx_queueHandle = osMessageQueueNew (32, sizeof(UART_Char_t), &uart_rx_queue_attributes);
-  /* creation of debug_command_queue */
-  debug_command_queueHandle = osMessageQueueNew (4, sizeof(Command_Message_t), &debug_command_queue_attributes);
 
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
@@ -222,9 +207,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of uartParserTask */
   uartParserTaskHandle = osThreadNew(UARTParserTask, NULL, &uartParserTask_attributes);
-
-  /* creation of commandDispatchTask */
-  commandDispatchTaskHandle = osThreadNew(CommandDispatchTask, NULL, &commandDispatchTask_attributes);
 
   /* creation of heartbeatTask */
   heartbeatTaskHandle = osThreadNew(HeartbeatTask, NULL, &heartbeatTask_attributes);

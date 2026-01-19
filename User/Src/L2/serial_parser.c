@@ -19,6 +19,7 @@
 
 /* User Includes */
 #include "user_uart.h"
+#include "L3/command_dispatch.h"
 
 extern osMessageQueueId_t uart_rx_queueHandle;
 extern osMessageQueueId_t debug_command_queueHandle;
@@ -95,10 +96,7 @@ static void ProcessDebugData(uint8_t data)
             }
 
             command_message.arg_count = argument_counter;
-            osMessageQueuePut(debug_command_queueHandle,
-                              &command_message,
-                              0,
-                              0);
+            Dispatch_Command(&command_message);
         }
 
         /* Reset parser state */
