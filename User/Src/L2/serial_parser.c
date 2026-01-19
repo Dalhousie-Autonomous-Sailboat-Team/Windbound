@@ -4,18 +4,20 @@
  * @brief Router code for parsing serial data.
  */
 
+/* Module Header */
+#include "serial_parser.h"
+
 /* System Headers */
-#include "assert.h"
 #include "main.h"
 #include "cmsis_os2.h"
 
+/* Standard Includes */
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
-/* Module Header */
-#include "serial_parser.h"
-
+/* User Includes */
 #include "user_uart.h"
 
 extern osMessageQueueId_t uart_rx_queueHandle;

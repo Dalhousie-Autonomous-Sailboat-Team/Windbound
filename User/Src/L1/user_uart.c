@@ -4,15 +4,19 @@
  * @brief Driver code for interfacing with UART peripherals.
  */
 
-/* System Headers */
-#include "app_freertos.h"
-#include "assert.h"
-#include "main.h"
-#include "cmsis_os2.h"
-#include <string.h>
-
 /* Module Header */
 #include "user_uart.h"
+
+/* System Headers */
+#include "main.h"
+#include "cmsis_os2.h"
+
+/* Standard Includes */
+#include <stdint.h>
+#include <stdbool.h>
+
+/* User Includes */
+#include "user_main.h"
 
 #define DEBUG_PORT UART_PORT_4
 

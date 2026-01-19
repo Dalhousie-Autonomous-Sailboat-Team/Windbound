@@ -9,6 +9,11 @@
 - Motor 3 output (labelled FLAP2 on the PCB) is used to control the back flap motor.
 - Silkscreen on/off switch labels are reversed.
 
+## Bug Tracker
+
+- CLI command parser doesn't track backspaces through space characters correctly. `set <backspace>_pwm mast 1` resulted in output: `Unknown command >set<` implying the parser thought the command was `set` instead of `set_pwm`.
+- MCU wakes up from sleep mode every 250 ms.
+
 ## Journal Entries
 
 ### 2026-01-13 - Zach
@@ -53,3 +58,7 @@ I created a basic UART driver that can support multiple UART peripherals. I have
 I am tempted to enable OTA updates over UART with this CLI. We could then use the Radio to send firmware updates to the Windbound board. If Shishir doesn't like me working on MVP functionality, this could be a fun side project.
 
 Looking at the RTOS debugger, it looks like we are sleeping for 99.93% of the time even when spamming commands. This is a good sign that my driver implementations are not blocking the CPU unnecessarily.
+
+### 2026-01-18 - Zach
+
+I think I may be a bit trigger happy with tasks. A lot of my tasks essentially just wait on a queue then run a few lines of code before going back to waiting. These could probably be turned into API functions that are called by other tasks instead, since the tasks themselves don't handle their own scheduling or timing. This would also cut down on a ton of RTOS overhead from the context switching, queue management, and task stacks. I am working on a PWM driver for motor and servo control next, and I will try to implement it as an API instead of a task. If all goes well, I will refactor the other drivers to be APIs too.

@@ -4,13 +4,19 @@
  * @brief Driver code for interfacing with I2C peripherals.
  */
 
+/* Module Header */
+#include "user_i2c.h"
+
 /* System Headers */
-#include "assert.h"
 #include "main.h"
 #include "cmsis_os2.h"
 
-/* Module Header */
-#include "user_i2c.h"
+/* Standard Includes */
+#include <stdint.h>
+#include <stdbool.h>
+
+/* User Includes */
+#include "user_main.h"
 
 /* Thread flag definitions */
 #define I2C_FLAG_DONE (1U << 0)

@@ -3,16 +3,19 @@
  * @brief Implementation for angle sensor interfacing.
  */
 
-/* System Headers */
-#include "assert.h"
-#include "main.h"
-#include "cmsis_os2.h"
-
 /* Module Header */
 #include "angle_sensors.h"
 
+/* System Headers */
+#include "main.h"
+#include "cmsis_os2.h"
+
+/* Standard Includes */
+#include <stdint.h>
+#include <stdbool.h>
+
+/* User Includes */
 #include "user_i2c.h"
-#include "app_freertos.h"
 
 #define MAST_ANGLE_READ_PERIOD_MS 1000
 #define ANGLE_SENSOR_ADDRESS (0x36 << 1) /* I2C address for the angle sensor */

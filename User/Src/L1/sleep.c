@@ -5,12 +5,19 @@
 
 #define LED_SLEEP_INDICATOR /* Uncomment to enable sleep indicator LEDs */
 
+/* Module Header */
+#include "sleep.h"
+
 /* System Headers */
 #include "main.h"
 #include "cmsis_os2.h"
 
-/* Module Header */
-#include "sleep.h"
+/* Standard Includes */
+#include <stdint.h>
+#include <stdbool.h>
+
+/* User Includes */
+#include "user_main.h"
 
 /**
  * @brief Pre Sleep Processing

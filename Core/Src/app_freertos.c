@@ -47,11 +47,11 @@
 /* USER CODE BEGIN Variables */
 
 /* USER CODE END Variables */
-/* Definitions for heartbeatTask */
-osThreadId_t heartbeatTaskHandle;
-const osThreadAttr_t heartbeatTask_attributes = {
-  .name = "heartbeatTask",
-  .priority = (osPriority_t) osPriorityLow,
+/* Definitions for initTask */
+osThreadId_t initTaskHandle;
+const osThreadAttr_t initTask_attributes = {
+  .name = "initTask",
+  .priority = (osPriority_t) osPriorityHigh,
   .stack_size = 128 * 4
 };
 /* Definitions for i2c1Task */
@@ -88,6 +88,13 @@ const osThreadAttr_t commandDispatchTask_attributes = {
   .name = "commandDispatchTask",
   .priority = (osPriority_t) osPriorityNormal,
   .stack_size = 256 * 4
+};
+/* Definitions for heartbeatTask */
+osThreadId_t heartbeatTaskHandle;
+const osThreadAttr_t heartbeatTask_attributes = {
+  .name = "heartbeatTask",
+  .priority = (osPriority_t) osPriorityBelowNormal,
+  .stack_size = 128 * 4
 };
 /* Definitions for debugPrintStringMutex */
 osMutexId_t debugPrintStringMutexHandle;
@@ -201,8 +208,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_QUEUES */
   /* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
-  /* creation of heartbeatTask */
-  heartbeatTaskHandle = osThreadNew(StartHeartbeatTask, NULL, &heartbeatTask_attributes);
+  /* creation of initTask */
+  initTaskHandle = osThreadNew(InitTask, NULL, &initTask_attributes);
 
   /* creation of i2c1Task */
   i2c1TaskHandle = osThreadNew(I2CManagerTask, (void *)1, &i2c1Task_attributes);
@@ -218,6 +225,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of commandDispatchTask */
   commandDispatchTaskHandle = osThreadNew(CommandDispatchTask, NULL, &commandDispatchTask_attributes);
+
+  /* creation of heartbeatTask */
+  heartbeatTaskHandle = osThreadNew(HeartbeatTask, NULL, &heartbeatTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
